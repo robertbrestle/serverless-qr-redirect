@@ -1,0 +1,4 @@
+source_id,destination_url,site_id,status_code
+testPath1,/,site_1,301
+testPath2,/this/is/a/test.html,site_1,
+testPath3,https://www.test.com/hello,site_2,

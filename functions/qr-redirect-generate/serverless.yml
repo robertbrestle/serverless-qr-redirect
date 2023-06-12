@@ -1,0 +1,74 @@
+service: qr-redirect-generate-lambda
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: PROD
+  region: us-east-1
+  memorySize: 128
+  timeout: 15
+  iam:
+    role:
+      name: qr-redirect-generate-lambda-iam-role
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:ListBucket"
+          Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+        - Effect: "Allow"
+          Action:
+            - "s3:PutObject"
+          Resource:
+            Fn::Join:
+              - ""
+              - - "arn:aws:s3:::"
+                - "Ref" : "ServerlessDeploymentBucket"
+                - "/*"
+        - Effect: "Allow"
+          Action:
+            - "s3:GetObject"
+            - "s3:PutObject"
+          Resource: arn:aws:s3:::qr-redirects/*
+      managedPolicies:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+
+package:
+  patterns:
+    - qr-redirect-generate/**
+    - handler.js
+    - '!examples/**'
+
+functions:
+  generate:
+    handler: handler.generate
+    description: Serverless lambda function for generating QR codes and redirects
+    events:
+      - s3:
+          bucket: qr-redirects
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: input/
+            - suffix: .csv
+          existing: false
+          forceDeploy: true
+    environment:
+      S3_BUCKET: qr-redirects
+      S3_FOLDER_MAPPINGS: mappings/
+      S3_FOLDER_IMAGES: images/qr-images/
+      S3_FOLDER_INPUT: input/
+      S3_FOLDER_OUTPUT: output/
+      REDIRECT_URL_PATH: /qr/
+      REDIRECT_URL_SCHEME: https://
+      REDIRECT_IMAGE_PATH: /qr-images/
+      REDIRECT_STATUSCODE_DEFAULT: 301
+      REDIRECT_CSV_HEADER: source_id,destination_url,site_id,status_code,qrcode_image
+      QRCODE_SIZE: 256
+      QRCODE_PADDING: 2
+      QRCODE_ECL: H
+      QRCODE_EXT: .svg
+      QRCODE_CONTENT_TYPE: image/svg+xml
+      SITE_IDS: site_1,site_2
+      SITE_HOSTNAMES: www.example.com,www.test.com

@@ -1,0 +1,23 @@
+{
+  "name": "qr-redirect",
+  "version": "1.0.0",
+  "description": "Serverless Lambda@Edge function for handling origin-response redirects",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robertbrestle/serverless-qr-redirect.git"
+  },
+  "keywords": [],
+  "author": "robertbrestle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/robertbrestle/serverless-qr-redirect/issues"
+  },
+  "homepage": "https://github.com/robertbrestle/serverless-qr-redirect#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1395.0"
+  }
+}

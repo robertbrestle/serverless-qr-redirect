@@ -1,0 +1,68 @@
+service: qr-redirect-lambda
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: PROD
+  region: us-east-1
+  memorySize: 128
+  timeout: 15
+  iam:
+    role:
+      name: qr-redirect-lambda-iam-role
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:ListBucket"
+          Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+        - Effect: "Allow"
+          Action:
+            - "s3:PutObject"
+          Resource:
+            Fn::Join:
+              - ""
+              - - "arn:aws:s3:::"
+                - "Ref" : "ServerlessDeploymentBucket"
+                - "/*"
+        - Effect: "Allow"
+          Action:
+            - "s3:GetObject"
+            - "s3:PutObject"
+          Resource: arn:aws:s3:::qr-redirects/*
+        - Effect: "Allow"
+          Action:
+            - "lambda:GetFunction"
+            - "lambda:EnableReplication*"
+            - "iam:CreateServiceLinkedRole"
+            - "cloudfront:UpdateDistribution"
+          #Resource: { "Fn::Join" : ["", ["arn:aws:lambda:::function:", { "Ref" : "RedirectLambdaFunction" } ] ]  }
+          Resource: "arn:aws:lambda:::function:*"
+      managedPolicies:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
+
+package:
+  patterns:
+    - qr-redirect/**
+    - handler.js
+    - helper.js
+    - config.json
+    - '!examples/**'
+
+functions:
+  redirect:
+    handler: handler.redirect
+    description: Serverless Lambda@Edge function for handling redirects
+#    events:
+#      - cloudFront:
+#          eventType: origin-response
+#          origin: s3://qr-redirects.s3.amazonaws.com
+#          pathPattern: /qr/*
+#          behavior:
+#            ViewerProtocolPolicy: redirect-to-https
+#            AllowedMethods:
+#              - 'GET'
+#              - 'HEAD'
+#            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6

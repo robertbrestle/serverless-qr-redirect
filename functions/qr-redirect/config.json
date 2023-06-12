@@ -1,0 +1,36 @@
+{
+    "S3": {
+        "Region": "us-east-1",
+        "Bucket": "qr-redirects",
+        "Folder": "mappings/",
+        "Extension": ".json"
+    },
+    "Headers": {
+        "StrictTransportSecurity": {
+            "Key": "Strict-Transport-Security",
+            "Value": "max-age=63072000"
+        },
+        "Location": {
+            "Key": "Location"
+        },
+        "XHostname": {
+            "Key": "X-Hostname"
+        }
+    },
+    "Redirect": {
+        "InputPathPrefix": "/qr/",
+        "DefaultRedirectQuery": "?utm_source=qr-code",
+        "DefaultStatus": "404",
+        "DefaultStatusDescription": "Not Found",
+        "DefaultScheme": "https://"
+    },
+    "SupportedStatusCodes": {
+        "301": "Moved Permanently",
+        "302": "Found",
+        "307": "Temporary Redirect"
+    },
+    "SiteIdMapping": {
+        "www.example.com": "site_1",
+        "www.test.com": "site_2"
+    }
+}

@@ -1,0 +1,4 @@
+source_id,destination_url,site_id,status_code,qrcode_image
+testPath1,/,site_1,301,https://www.example.com/qr-images/site_1-testPath1.svg
+testPath2,/this/is/a/test.html,site_1,301,https://www.example.com/qr-images/site_1-testPath2.svg
+testPath3,https://www.test.com/hello,site_2,301,https://www.test.com/qr-images/site_2-testPath3.svg
