@@ -2,7 +2,7 @@
 Serverless lambda functions for generating QR codes and handling redirects with CloudFront and S3.
 
 # QR Redirect Generator
-This serverless project creates an S3 bucket with a trigger to a Lambda function responsible for generating QR codes and their associated rediects.  
+This serverless project creates an S3 bucket with a trigger to a Lambda function responsible for generating QR codes and their associated redirects.  
 
 ![A sequence diagram for the QR redirect generator](images/qr-redirect-generator.png)
 
